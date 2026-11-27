@@ -1,6 +1,7 @@
 import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
+
 from qkd_postproc import estimate_qber
 
 rng = np.random.default_rng()
@@ -29,9 +30,7 @@ def simulate_channel(alice_bits, alice_bases, bob_bases, p):
 
     circuits = []
 
-    for bit, a_basis, b_basis in zip(
-        alice_bits, alice_bases, bob_bases
-    ):
+    for bit, a_basis, b_basis in zip(alice_bits, alice_bases, bob_bases):
         qc = QuantumCircuit(1, 1)
 
         prepare_qubit(qc, bit, a_basis)
@@ -44,10 +43,9 @@ def simulate_channel(alice_bits, alice_bases, bob_bases, p):
     sampler = StatevectorSampler()
     result = sampler.run(circuits, shots=1).result()
 
-    bob_bits = np.array([
-        int(result[i].data.c.get_bitstrings()[0])
-        for i in range(len(circuits))
-    ])
+    bob_bits = np.array(
+        [int(result[i].data.c.get_bitstrings()[0]) for i in range(len(circuits))]
+    )
 
     return bob_bits
 
@@ -77,7 +75,7 @@ def main():
 
     N = 10000
     p = 0.1
-    
+
     # Alice generates random bits and bases
     alice_bits = rng.integers(0, 2, N)
     alice_bases = rng.integers(0, 2, N)
@@ -86,16 +84,10 @@ def main():
     bob_bases = rng.integers(0, 2, N)
 
     # Quantum transmission
-    bob_bits = simulate_channel(
-        alice_bits, alice_bases, bob_bases, p
-    )
+    bob_bits = simulate_channel(alice_bits, alice_bases, bob_bases, p)
 
     # Key sifting
-    alice_key, bob_key = sift_key(
-        alice_bits, alice_bases,
-        bob_bits, bob_bases
-    )
-
+    alice_key, bob_key = sift_key(alice_bits, alice_bases, bob_bits, bob_bases)
 
     # QBER estimation
     estimation = estimate_qber(
@@ -105,7 +97,7 @@ def main():
         batch_size=100,
         target_errors=100,
         confidence=0.99,
-        precision=0.03
+        precision=0.03,
     )
 
     # Results
@@ -114,8 +106,7 @@ def main():
     print("Estimated QBER:", f"{estimation['qber']:.2%}")
     print("Errors:", estimation["errors"])
     print("Bits revealed:", estimation["sampled"])
-    print("Confidence interval:",
-          estimation["confidence_interval"])
+    print("Confidence interval:", estimation["confidence_interval"])
 
     # Remaining key material
     alice_final = estimation["alice_key"]
@@ -124,9 +115,8 @@ def main():
     print("\n--- Remaining key ---")
     print("Alice's key length:", len(alice_final))
     print("Bob's key length:", len(bob_final))
-    print("Keys identical:",
-          np.array_equal(alice_final, bob_final))
+    print("Keys identical:", np.array_equal(alice_final, bob_final))
 
-    
+
 if __name__ == "__main__":
     main()

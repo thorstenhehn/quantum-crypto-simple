@@ -2,6 +2,7 @@ import numpy as np
 
 rng = np.random.default_rng()
 
+
 def estimate_qber(
     alice_key,
     bob_key,
@@ -9,7 +10,7 @@ def estimate_qber(
     batch_size=100,
     target_errors=100,
     confidence=0.99,
-    precision=0.05
+    precision=0.05,
 ):
     """Adaptive QBER estimation using random batches."""
 
@@ -31,14 +32,11 @@ def estimate_qber(
     batch_count = 0
 
     while sampled < max_samples:
-
         # Draw next batch
         size = min(batch_size, max_samples - sampled)
-        batch = positions[sampled:sampled + size]
+        batch = positions[sampled : sampled + size]
 
-        batch_errors = np.sum(
-            alice_key[batch] != bob_key[batch]
-        )
+        batch_errors = np.sum(alice_key[batch] != bob_key[batch])
 
         sampled += size
         errors += batch_errors
@@ -49,9 +47,7 @@ def estimate_qber(
         # Conservative confidence bound
         alpha = (1 - confidence) / batch_count
 
-        margin = np.sqrt(
-            np.log(2 / alpha) / (2 * sampled)
-        )
+        margin = np.sqrt(np.log(2 / alpha) / (2 * sampled))
 
         lower = max(0.0, qber - margin)
         upper = min(1.0, qber + margin)
@@ -85,6 +81,5 @@ def estimate_qber(
         "confidence_interval": (lower, upper),
         "status": status,
         "alice_key": alice_key[remaining],
-        "bob_key": bob_key[remaining]
+        "bob_key": bob_key[remaining],
     }
-
