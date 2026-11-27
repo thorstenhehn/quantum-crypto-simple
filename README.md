@@ -14,11 +14,17 @@ https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit.
 
 # Algorithms and Usage
 
-## Quantum Key Distribution Basics
+## Quantum Key Distribution BB84
 
-This script simulates the basics of quantum key distribution (QKD).
-This includes preparing a random binary key along with a randomly
-chosen signalling base for each bit. We implement a simple channel
-model and the detection at the receiver.  Two postprocessing steps are
-currently implemented: key sifting and qber estimation. Further
-postprocessing will be implemented in the future.
+This script simulates the basics of quantum key distribution (QKD)
+according to the protocol defined by Bennett and Brassard in 1984
+(BB84).  This includes preparing a random binary key along with a
+randomly chosen signalling base for each bit. We implement a simple
+channel model and the detection at the receiver.  Two postprocessing
+steps are currently implemented: key sifting and qber
+estimation. Further postprocessing will be implemented in the future.
+
+Run the script using
+```
+python qkd_bb84.py
+```
