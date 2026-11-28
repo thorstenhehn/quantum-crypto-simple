@@ -2,7 +2,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
 
-from qkd_postproc import sift_key, estimate_qber
+from qkd_postproc import estimate_qber, sift_key
 
 rng = np.random.default_rng()
 
