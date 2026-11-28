@@ -74,7 +74,7 @@ def sift_key(alice_bits, alice_bases, bob_bits, bob_bases):
 def main():
 
     N = 10000
-    p = 0.1
+    p = 0.19
 
     # Alice generates random bits and bases
     alice_bits = rng.integers(0, 2, N)
@@ -98,6 +98,7 @@ def main():
         target_errors=100,
         confidence=0.99,
         precision=0.03,
+        max_qber=0.11,
     )
 
     # Results

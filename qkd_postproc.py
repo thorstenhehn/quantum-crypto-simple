@@ -10,7 +10,8 @@ def estimate_qber(
     batch_size=100,
     target_errors=100,
     confidence=0.99,
-    precision=0.05,
+    precision=0.03,
+    max_qber=0.11,
 ):
     """Adaptive QBER estimation using random batches."""
 
@@ -59,13 +60,15 @@ def estimate_qber(
             f"CI: [{lower:.2%}, {upper:.2%}]"
         )
 
-        # Stop if EITHER target is reached
-        if errors >= target_errors or 2 * margin <= precision:
-            status = (
-                "TARGET ERRORS REACHED"
-                if errors >= target_errors
-                else "CI PRECISION REACHED"
-            )
+        # Stop if either target is reached or lower bound exceeds threshold
+        if errors >= target_errors:
+            status = "TARGET ERRORS REACHED"
+            break
+        if 2 * margin <= precision:
+            status = "CI PRECISION REACHED"
+            break
+        if lower > max_qber:
+            status = "QBER TOO HIGH"
             break
 
     else:
