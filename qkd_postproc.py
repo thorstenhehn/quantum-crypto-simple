@@ -3,6 +3,13 @@ import numpy as np
 rng = np.random.default_rng()
 
 
+def sift_key(alice_bits, alice_bases, bob_bits, bob_bases):
+
+    matching = alice_bases == bob_bases
+
+    return alice_bits[matching], bob_bits[matching]
+
+
 def estimate_qber(
     alice_key,
     bob_key,

@@ -2,7 +2,7 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.primitives import StatevectorSampler
 
-from qkd_postproc import estimate_qber
+from qkd_postproc import sift_key, estimate_qber
 
 rng = np.random.default_rng()
 
@@ -62,13 +62,6 @@ def bit_flip_noise(qc, p):
 
     if rng.random() < p:
         qc.x(0)
-
-
-def sift_key(alice_bits, alice_bases, bob_bits, bob_bases):
-
-    matching = alice_bases == bob_bases
-
-    return alice_bits[matching], bob_bits[matching]
 
 
 def main():
